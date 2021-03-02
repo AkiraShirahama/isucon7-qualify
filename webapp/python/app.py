@@ -78,7 +78,7 @@ def get_initialize():
 
     for row in rows:
         filepath = os.path.join('/usr/share/nginx/html/static', row['name'])
-        with open(filepath, 'w') as f:
+        with open(filepath, 'wb') as f:
             f.write(row['data'])
 
     cur.close()
@@ -389,7 +389,7 @@ def post_profile():
     if avatar_name and avatar_data:
         # cur.execute("INSERT INTO image (name, data) VALUES (%s, _binary %s)", (avatar_name, avatar_data))
         filepath = os.path.join('/usr/share/nginx/html/static', avatar_name)
-        with open(filepath, 'w') as f:
+        with open(filepath, 'wb') as f:
             f.write(avatar_data)
 
         cur.execute("UPDATE user SET avatar_icon = %s WHERE id = %s", (avatar_name, user_id))
