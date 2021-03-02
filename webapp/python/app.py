@@ -233,19 +233,27 @@ def get_message():
     #     response.append(r)
     # response.reverse()
 
+
     cur.execute("SELECT message.id, message.created_at, message.content, user.name, user.display_name, user.avatar_icon FROM message LEFT JOIN user ON  message.user_id = user.id AND message.id > %s AND channel_id = %s ORDER BY id DESC LIMIT 100",
                 (last_message_id, channel_id))
     rows = cur.fetchall()
     response = []
     for row in rows:
         r = {}
-        r['id'] = row['message.id']
+        # r['id'] = row['message.id']
+        # r['user'] = {}
+        # r['user']['avatar_icon'] = row['user.avatar_icon']
+        # r['user']['display_name'] = row['user.display_name']
+        # r['user']['avatar_icon'] = row['user.avatar_icon']
+        # r['date'] = row['message.created_at'].strftime("%Y/%m/%d %H:%M:%S")
+        # r['content'] = row['message.content']
+        r['id'] = row['id']
         r['user'] = {}
-        r['user']['avatar_icon'] = row['user.avatar_icon']
-        r['user']['display_name'] = row['user.display_name']
-        r['user']['avatar_icon'] = row['user.avatar_icon']
-        r['date'] = row['message.created_at'].strftime("%Y/%m/%d %H:%M:%S")
-        r['content'] = row['message.content']
+        r['user']['name'] = row['name']
+        r['user']['display_name'] = row['display_name']
+        r['user']['avatar_icon'] = row['avatar_icon']
+        r['date'] = row['created_at'].strftime("%Y/%m/%d %H:%M:%S")
+        r['content'] = row['content']
         response.append(r)
     response.reverse()
 
@@ -335,13 +343,20 @@ def get_history(channel_id):
     messages = []
     for row in rows:
         r = {}
-        r['id'] = row['message.id']
+        # r['id'] = row['message.id']
+        # r['user'] = {}
+        # r['user']['avatar_icon'] = row['user.avatar_icon']
+        # r['user']['display_name'] = row['user.display_name']
+        # r['user']['avatar_icon'] = row['user.avatar_icon']
+        # r['date'] = row['message.created_at'].strftime("%Y/%m/%d %H:%M:%S")
+        # r['content'] = row['message.content']
+        r['id'] = row['id']
         r['user'] = {}
-        r['user']['avatar_icon'] = row['user.avatar_icon']
-        r['user']['display_name'] = row['user.display_name']
-        r['user']['avatar_icon'] = row['user.avatar_icon']
-        r['date'] = row['message.created_at'].strftime("%Y/%m/%d %H:%M:%S")
-        r['content'] = row['message.content']
+        r['user']['name'] = row['name']
+        r['user']['display_name'] = row['display_name']
+        r['user']['avatar_icon'] = row['avatar_icon']
+        r['date'] = row['created_at'].strftime("%Y/%m/%d %H:%M:%S")
+        r['content'] = row['content']
         messages.append(r)
     messages.reverse()
 
