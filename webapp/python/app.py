@@ -73,13 +73,13 @@ def get_initialize():
     cur.execute("DELETE FROM haveread")
 
     # iconsの画像の出力
-    cur.execute("SELECT * FROM image")
-    rows = cur.fetchall()
+    # cur.execute("SELECT * FROM image")
+    # rows = cur.fetchall()
 
-    for row in rows:
-        filepath = os.path.join('/usr/share/nginx/html/static', row['name'])
-        with open(filepath, 'wb') as f:
-            f.write(row['data'])
+    # for row in rows:
+    #     filepath = os.path.join('/usr/share/nginx/html/static', row['name'])
+    #     with open(filepath, 'wb') as f:
+    #         f.write(row['data'])
 
     cur.close()
     return ('', 204)
