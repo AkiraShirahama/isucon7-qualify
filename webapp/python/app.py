@@ -248,10 +248,9 @@ def get_message():
         # r['date'] = row['message.created_at'].strftime("%Y/%m/%d %H:%M:%S")
         # r['content'] = row['message.content']
         r['id'] = row['id']
-        r['user'] = {}
-        r['user']['name'] = row['name']
-        r['user']['display_name'] = row['display_name']
-        r['user']['avatar_icon'] = row['avatar_icon']
+        r['name'] = row['name']
+        r['display_name'] = row['display_name']
+        r['avatar_icon'] = row['avatar_icon']
         r['date'] = row['created_at'].strftime("%Y/%m/%d %H:%M:%S")
         r['content'] = row['content']
         response.append(r)
@@ -351,10 +350,9 @@ def get_history(channel_id):
         # r['date'] = row['message.created_at'].strftime("%Y/%m/%d %H:%M:%S")
         # r['content'] = row['message.content']
         r['id'] = row['id']
-        r['user'] = {}
-        r['user']['name'] = row['name']
-        r['user']['display_name'] = row['display_name']
-        r['user']['avatar_icon'] = row['avatar_icon']
+        r['name'] = row['name']
+        r['display_name'] = row['display_name']
+        r['avatar_icon'] = row['avatar_icon']
         r['date'] = row['created_at'].strftime("%Y/%m/%d %H:%M:%S")
         r['content'] = row['content']
         messages.append(r)
