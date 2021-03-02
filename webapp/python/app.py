@@ -234,7 +234,7 @@ def get_message():
     # response.reverse()
 
 
-    cur.execute("SELECT message.id, message.created_at, message.content, user.name, user.display_name, user.avatar_icon FROM message LEFT JOIN user ON  message.user_id = user.id WHERE message.id > %s AND message.channel_id = %s ORDER BY message.id DESC LIMIT 100",
+    cur.execute("SELECT message.id, message.created_at, message.content, user.name, user.display_name, user.avatar_icon FROM message INNER JOIN user ON  message.user_id = user.id AND message.id > %s AND message.channel_id = %s ORDER BY message.id DESC LIMIT 100",
                 (last_message_id, channel_id))
     rows = cur.fetchall()
     response = []
@@ -249,9 +249,6 @@ def get_message():
         r['content'] = row['content']
         response.append(r)
     response.reverse()
-
-
-
 
     max_message_id = max(r['id'] for r in rows) if rows else 0
     cur.execute('INSERT INTO haveread (user_id, channel_id, message_id, updated_at, created_at)'
@@ -277,7 +274,7 @@ def fetch_unread():
 
     res = []
     for channel_id in channel_ids:
-        cur.execute('SELECT * FROM haveread WHERE user_id = %s AND channel_id = %s', (user_id, channel_id))
+        cur.execute('SELECT message_id FROM haveread WHERE user_id = %s AND channel_id = %s', (user_id, channel_id))
         row = cur.fetchone()
         if row:
             cur.execute('SELECT COUNT(*) as cnt FROM message WHERE channel_id = %s AND %s < id',
@@ -330,7 +327,7 @@ def get_history(channel_id):
     # return flask.render_template('history.html',
     #                              channels=channels, channel_id=channel_id,
     #                              messages=messages, max_page=max_page, page=page)
-    cur.execute("SELECT message.id, message.created_at, message.content, user.name, user.display_name, user.avatar_icon  FROM message LEFT JOIN user ON  message.user_id = user.id WHERE message.channel_id = %s ORDER BY message.id DESC LIMIT %s OFFSET %s",
+    cur.execute("SELECT message.id, message.created_at, message.content, user.name, user.display_name, user.avatar_icon  FROM message INNER JOIN user ON  message.user_id = user.id AND message.channel_id = %s ORDER BY message.id DESC LIMIT %s OFFSET %s",
                 (channel_id, N, (page - 1) * N))
     rows = cur.fetchall()
     messages = []
