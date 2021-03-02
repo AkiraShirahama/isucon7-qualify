@@ -234,7 +234,7 @@ def get_message():
     # response.reverse()
 
 
-    cur.execute("SELECT message.id, message.created_at, message.content, user.name, user.display_name, user.avatar_icon FROM message LEFT JOIN user ON  message.user_id = user.id AND message.id > %s AND channel_id = %s ORDER BY id DESC LIMIT 100",
+    cur.execute("SELECT message.id, message.created_at, message.content, user.name, user.display_name, user.avatar_icon FROM message LEFT JOIN user ON  message.user_id = user.id WHERE message.id > %s AND message.channel_id = %s ORDER BY message.id DESC LIMIT 100",
                 (last_message_id, channel_id))
     rows = cur.fetchall()
     response = []
@@ -336,7 +336,7 @@ def get_history(channel_id):
     # return flask.render_template('history.html',
     #                              channels=channels, channel_id=channel_id,
     #                              messages=messages, max_page=max_page, page=page)
-    cur.execute("SELECT message.id, message.created_at, message.content, user.name, user.display_name, user.avatar_icon  FROM message LEFT JOIN user ON  message.user_id = user.id AND channel_id = %s ORDER BY id DESC LIMIT %s OFFSET %s",
+    cur.execute("SELECT message.id, message.created_at, message.content, user.name, user.display_name, user.avatar_icon  FROM message LEFT JOIN user ON  message.user_id = user.id WHERE message.channel_id = %s ORDER BY message.id DESC LIMIT %s OFFSET %s",
                 (channel_id, N, (page - 1) * N))
     rows = cur.fetchall()
     messages = []
