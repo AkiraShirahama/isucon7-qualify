@@ -9,6 +9,7 @@ import random
 import string
 import tempfile
 import time
+# from flask_caching import Cache
 
 
 static_folder = pathlib.Path(__file__).resolve().parent.parent / 'public'
@@ -27,6 +28,15 @@ config = {
     'db_password': os.environ.get('ISUBATA_DB_PASSWORD', ''),
 }
 
+# DICTIONARY = {}
+# cache = Cache(app, config={
+#     'CACHE_TYPE': 'redis',
+#     'CACHE_DEFAULT_TIMEOUT':60,
+#     'CACHE_REDIS_HOST': 'localhost',
+#     'CACHE_REDIS_PORT': '6379',
+#     'CACHE_REDIS_PASSOWRD': '',
+#     'CACHE_REDIS_DB': '0'
+# })
 
 def dbh():
     if hasattr(flask.g, 'db'):
@@ -61,6 +71,16 @@ def get_initialize():
     cur.execute("DELETE FROM channel WHERE id > 10")
     cur.execute("DELETE FROM message WHERE id > 10000")
     cur.execute("DELETE FROM haveread")
+
+    # iconsの画像の出力
+    cur.execute("SELECT * FROM image")
+    rows = cur.fetchall()
+
+    for row in rows:
+        filepath = os.path.join('/usr/share/nginx/html/static', row['name'])
+        with open(filepath, 'w') as f:
+            f.write(row['data'])
+
     cur.close()
     return ('', 204)
 
@@ -205,6 +225,7 @@ def get_message():
     for row in rows:
         r = {}
         r['id'] = row['id']
+
         cur.execute("SELECT name, display_name, avatar_icon FROM user WHERE id = %s", (row['user_id'],))
         r['user'] = cur.fetchone()
         r['date'] = row['created_at'].strftime("%Y/%m/%d %H:%M:%S")
@@ -366,7 +387,11 @@ def post_profile():
                 avatar_data = data
 
     if avatar_name and avatar_data:
-        cur.execute("INSERT INTO image (name, data) VALUES (%s, _binary %s)", (avatar_name, avatar_data))
+        # cur.execute("INSERT INTO image (name, data) VALUES (%s, _binary %s)", (avatar_name, avatar_data))
+        filepath = os.path.join('/usr/share/nginx/html/static', avatar_name)
+        with open(filepath, 'w') as f:
+            f.write(avatar_data)
+
         cur.execute("UPDATE user SET avatar_icon = %s WHERE id = %s", (avatar_name, user_id))
 
     if display_name:
